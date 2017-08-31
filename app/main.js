@@ -1,3 +1,9 @@
+/**
+ * @fileoverview 
+ * This is our main A-Frame application.
+ * It defines the main A-Frame Scene which gets mounted root div.
+ */
+
 import { h, Component } from 'preact'
 import { Entity, Scene } from 'aframe-react'
 
@@ -7,7 +13,8 @@ class Main extends Component {
   constructor() {
     super()
     this.state = {
-      colorIndex: 0
+      colorIndex: 0,
+      spherePosition: { x: 0.0, y: 4, z: -10.0 }
     }
   }
 
@@ -48,7 +55,7 @@ class Main extends Component {
             click: this._handleClick.bind(this)
           }}
           radius={2}
-          position={{ x: 0.0, y: 4, z: -10.0 }}
+          position={this.state.spherePosition}
           color="#FAFAF1"
           animation__rotate={{
             property: 'rotation',
@@ -56,6 +63,19 @@ class Main extends Component {
             easing: 'linear',
             loop: true,
             to: { x: 0, y: 360, z: 0 }
+          }}
+          animation__oscillate={{
+            property: 'position',
+            dur: 2000,
+            dir: 'alternate',
+            easing: 'linear',
+            loop: true,
+            from: this.state.spherePosition,
+            to: {
+              x: this.state.spherePosition.x,
+              y: this.state.spherePosition.y + 0.25,
+              z: this.state.spherePosition.z
+            }
           }}
         />
 
@@ -65,8 +85,14 @@ class Main extends Component {
             cursor={{ fuse: false }}
             material={{ color: 'white', shader: 'flat', opacity: 0.75 }}
             geometry={{ radiusInner: 0.005, radiusOuter: 0.007 }}
-            event-set__1="_event: mouseenter; scale: 1.4 1.4 1.4"
-            event-set__2="_event: mouseleave; scale: 1 1 1"
+            event-set__1={{
+              _event: 'mouseenter',
+              scale: { x: 1.4, y: 1.4, z: 1.4 }
+            }}
+            event-set__2={{
+              _event: 'mouseleave',
+              scale: { x: 1, y: 1, z: 1 }
+            }}
             raycaster="objects: .clickable"
           />
         </Entity>
