@@ -76,11 +76,11 @@ AFRAME.registerComponent('lowpoly', {
         spheres.add(sphere)
       }
       scene.add(spheres)
-      this.data.spheres = spheres
     }
   },
 
   update: function() {
+    // Get the ref of the object to which the component is attached
     const obj = this.el.getObject3D('mesh')
 
     // Modify the color of the material during runtime

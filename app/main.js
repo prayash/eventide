@@ -21,6 +21,10 @@ class Main extends Component {
   render() {
     return (
       <Scene
+        effects="bloom, film, fxaa"
+        bloom="radius: 0.99"
+        film="sIntensity: 0.25; nIntensity: 0.25"
+        fxaa
         environment={{
           preset: 'starry',
           seed: 1,
