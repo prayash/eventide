@@ -59,18 +59,131 @@ class App extends Component {
   }
 }
 ```
-Was that too easy? That's the power of A-Frame components. Don't worry. We'll dive into writing some of our own stuff from scratch later on.
+Was that too easy? That's the power of A-Frame components. Don't worry. We'll dive into writing some of our own stuff from scratch later on. We might as well take care of the camera and the cursor here. We define another `Entity`
+
+```javascript
+<Entity primitive="a-camera" wasd-controls-enabled={false}>
+  <Entity
+    primitive="a-cursor"
+    cursor={{ fuse: false }}
+    geometry={{ radiusInner: 0.005, radiusOuter: 0.007 }}
+    material={{ color: 'white', shader: 'flat', opacity: 0.75 }}
+  />
+</Entity>
+```
 
 ## Populating the Environment
-Now that we've got this sweet scene set up, we can populate it with objects. They can be basic 3D geometry objects like a box, sphere, cylinder, octahedron, or even a custom 3D model. For the sake of simplicity, we'll use of the defaults provided by A-Frame, and then write out own component and attach it to the default object to customize it.
+Now that we've got this sweet scene set up, we can populate it with objects. They can be basic 3D geometry objects like a box, sphere, cylinder, octahedron, or even a custom 3D model. For the sake of simplicity, we'll use of the defaults provided by A-Frame, and then write out own component and attach it to the default object to customize it. Let's build a low poly count sphere because they look cool and work out of the box. We'll define another entity and pass in our attributes to make it look the way we want. We'll be using the `a-octahedron` primitive for this. 
+
+```javascript
+<Entity
+  primitive="a-octahedron"
+  detail={2}
+  radius={2}
+  position={{ x: 0.0, y: 4, z: -10.0 }}
+  color="#FAFAF1"
+/>
+```
 
 ## Building Your First A-Frame Component
-Baby steps. Now let's take it up a notch and build our own custom A-Frame component from scratch. This component will add to the appearance of our object, and also attach interactive behavior to it.
+Baby steps. Now let's take it up a notch and build our own custom A-Frame component from scratch. This component will alter the appearance of our object, and also attach interactive behavior to it. Our component will take the provided shape, and create a slightly bigger wireframe of the same shape on top of it. That'll give it a really neat meshy (is that even a word?) look. To do that, we'll define our component in a new js file.
 
-Open up `lib/`
+Open up `app/components/aframe-meshy-component.js`. First, we'll register the component using the global `AFRAME` reference, define our schema for the component, and add our three.js code inside the `init` function. You can think of schema as arguments, or properties that can be passed to the component. We'll be passing in a few options like color, opacity, and other visual properties. The init function will run as soon as the component gets attached to the Entity. The boilerplate for a A-Frame component looks like:
+
+```javascript
+AFRAME.registerComponent('frame', {
+  schema: {
+    // Here we define our properties, their types and default values
+    color: { type: 'string', default: '#FFF' },
+    nodes: { type: 'boolean', default: false },
+    opacity: { type: 'number', default: 1.0 },
+    wireframe: { type: 'boolean', default: false }
+  },
+
+  init: function() {
+    // This block gets executed when the component gets initialized.
+    // Then we can use our properties like so:
+    console.log('The color of our component is ', this.data.color)
+  }
+}
+```
+
+Let's fill the `init` function in. First things first, we change the color of the object right away. Then we attach a new shape which becomes the wireframe. In order to create any 3D object programmatically in WebGL, we first need to define a geometry. This defines the vertices and the faces of our object. Then, we need to define a material, which defines the appearance of the object (color, light reflection, texture). We can then compose a mesh by combining the two. We then need to position it correctly, and attach it to the scene. Don't worry if this code looks a little verbose, I've added some comments to guide you through it.
+
+```javascript
+init: function() {
+  // Get the ref of the object to which the component is attached
+  const obj = this.el.getObject3D('mesh')
+
+  // Grab the reference to the main WebGL scene
+  const scene = document.querySelector('a-scene').object3D
+
+  // Modify the color of the material
+  obj.material = new THREE.MeshPhongMaterial({
+    color: this.data.color,
+    shading: THREE.FlatShading
+  })
+
+  // Define the geometry for the outer wireframe
+  const frameGeom = new THREE.OctahedronGeometry(3, 2)
+
+  // Define the material for it
+  const frameMat = new THREE.MeshPhongMaterial({
+    color: '#FFFFFF',
+    opacity: this.data.opacity,
+    transparent: true,
+    wireframe: true
+  })
+
+  // The final mesh is a composition of the geometry and the material
+  const icosFrame = new THREE.Mesh(frameGeom, frameMat)
+
+  // Set the position of the mesh to the position of the sphere
+  const { x, y, z } = obj.position
+  icosFrame.position.set(0.0, 4, -10.0)
+
+  // If the wireframe prop is set to true, then we attach the new object
+  if (this.data.wireframe) {
+    scene.add(icosFrame)
+  }
+
+  // If the nodes attribute is set to true
+  if (this.data.nodes) {
+    let spheres = []
+    let vertices = icosFrame.geometry.vertices
+
+    // Traverse the vertices of the wireframe and attach small spheres
+    for (var i in vertices) {
+      // Create a basic sphere
+      let geometry = new THREE.SphereGeometry(0.045, 16, 16)
+      let material = new THREE.MeshBasicMaterial({
+        color: '#FFFFFF',
+        opacity: this.data.opacity,
+        shading: THREE.FlatShading,
+        transparent: true
+      })
+
+      let sphere = new THREE.Mesh(geometry, material)
+
+      spheres.push(sphere)
+
+      // Reposition them correctly
+      spheres[i].position.set(
+        vertices[i].x,
+        vertices[i].y + 4,
+        vertices[i].z + -10.0
+      )
+
+      scene.add(spheres[i])
+    }
+  }
+}
+```
 
 ## Adding Interactivity
-A-Frame comes with a built in raycaster fully functional out of the box. [Raycasting](https://en.wikipedia.org/wiki/Ray_casting) gives us the abiltiy to trigger events when an object is 'gazed at' with our cursor. We can also change this behavior to accomdate user input (ie click). To add a raycaster, we provide the `raycaster` prop to the camera with the classes of objects which we want to be clickable. Our camera node should now look like:
+We have our scene, and we've placed our objects. They look the way we want. Now what? This is still very static. Let's add some user input!
+
+A-Frame comes with a fully functional raycaster out of the box. [Raycasting](https://en.wikipedia.org/wiki/Ray_casting) gives us the abiltiy to trigger events when an object is 'gazed at' or 'clicked on' with our cursor. Again, you don't have to worry about how it's implemented. Although the math behind it is fascinating, we simply don't have to worry about it as it's out of the scope of this tutorial. Just know what it is and how to use it. To add a raycaster, we provide the `raycaster` prop to the camera with the classes of objects which we want to be clickable. Our camera node should now look like:
 ```javascript
 <Entity primitive="a-camera" wasd-controls-enabled={false}>
   <Entity
@@ -92,7 +205,7 @@ A-Frame comes with a built in raycaster fully functional out of the box. [Raycas
 ```
 
 ## Animating Objects
-Let's animate all the things. We can utilize the [aframe-animation-component](https://github.com/ngokevin/kframe/tree/master/components/animation/) to make this happen. It's already been imported so let's add that functionality to our buttons (planes, technically). The play and pause button should now look like:
+Let's animate all the things. We can utilize the [aframe-animation-component](https://github.com/ngokevin/kframe/tree/master/components/animation/) to make this happen. It's already been imported so let's add that functionality to our low poly sphere (planes, technically). The play and pause button should now look like:
 
 ## Polishing Up
 This is a WebGL rabbit hole. Post-processing effects in WebGL are extremely fast and can add a lot of character to your scene. There are many shaders available for use depending on the aesthetic you're going for. You can very easily overdo it but even something subtle can give a lot of life to your scene. If you want to add post-processing effects to your scene, you can utilize the additional shaders provided by three.js to do so. Some of my favorites are the bloom, blur, and static TV shaders. Let's run through that very briefly here.
@@ -101,7 +214,7 @@ This is a WebGL rabbit hole. Post-processing effects in WebGL are extremely fast
 If you look inside the `bin/` directory, there should be a bash script named deploy.sh. We'll be executing this in order to deploy to the `gh-pages` branch of our project.
 
 ## Fin
-I hope you enjoyed this tutorial and you see the power of A-Frame and its capabilities. By utilizing third-party components and cooking up our own, we can create something decent with relative ease. We've only scratched the surface, and now it's up to you to explore the rest. As 2D content fails to meet the rising demand for immersive content on the web, tools like A-Frame and three.js have come into the limelight. The future of WebVR is looking bright. Go on now, unleash your creativity, for the browser is an empty 3D canvas. If you end up making something cool, feel free to tweet @_prayash and @aframevr so we all can see it too.
+I hope you enjoyed this tutorial and you see the power of A-Frame and its capabilities. By utilizing third-party components and cooking up our own, we can create something decent with relative ease. We've only scratched the surface, and now it's up to you to explore the rest. As 2D content fails to meet the rising demand for immersive content on the web, tools like A-Frame and three.js have come into the limelight. The future of WebVR is looking bright. Go on now, unleash your creativity, for the browser is an empty 3D canvas. If you end up making something cool, feel free to tweet [@_prayash](http://twitter.com/_prayash) and [@aframevr](http://twitter.com/aframevr) so we all can see it too.
 
 ## Additional Resources
 Check out these additional resources to advance your knowledge of A-Frame.

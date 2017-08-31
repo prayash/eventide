@@ -29,13 +29,13 @@ class Main extends Component {
           frame={{
             color: '#D92B6A',
             nodes: true,
-            opacity: 0.25,
+            opacity: 0.15,
             wireframe: true
           }}
           primitive="a-octahedron"
           detail={2}
           radius={2}
-          position={{ x: 0.0, y: 4, z: -15.0 }}
+          position={{ x: 0.0, y: 4, z: -10.0 }}
           color="#FAFAF1"
           animation__rotate={{
             property: 'rotation',
@@ -50,8 +50,8 @@ class Main extends Component {
           <Entity
             primitive="a-cursor"
             cursor={{ fuse: false }}
-            geometry={{ radiusInner: 0.005, radiusOuter: 0.007 }}
             material={{ color: 'white', shader: 'flat', opacity: 0.75 }}
+            geometry={{ radiusInner: 0.005, radiusOuter: 0.007 }}
           />
         </Entity>
       </Scene>
