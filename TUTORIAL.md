@@ -2,40 +2,34 @@
 
 ### Building VR apps has never been easier. Multiply that by the power and accessibility of the web, and you get WebVR.
 
-Today, we'll be running through a short tutorial on creating our own WebVR application using [A-Frame](https://aframe.io/) and [React](https://facebook.github.io/react/). We'll cover the setup process, build out a basic scene, and add interactive elements and animations. A-Frame has an excellent third-party component registry, so we will be pulling some of those in in addition to writing one from scratch because that's really where the power lies. In the end, we'll go through the deployment process through [surge](https://surge.sh/) so that you can share your app with the world and test it out live on your smartphone (or Google Cardboard if you have one available). Over the course of this tutorial, we will be building a dreamy scene like this.
+Today, we'll be running through a short tutorial on creating our own WebVR application using [A-Frame](https://aframe.io/) and [React](https://facebook.github.io/react/). We'll cover the setup process, build out a basic scene, and add interactive elements and animations. A-Frame has an excellent third-party component registry, so we will be using some of those in addition to writing one from scratch. In the end, we'll go through the deployment process through [surge](https://surge.sh/) so that you can share your app with the world and test it out live on your smartphone (or Google Cardboard if you have one available). For reference, the final code is [here]() in case you get lost. Over the course of this tutorial, we will be building a dreamy scene like this.
 
 [Insert CodePen!]
 
 Exciting, right? Without further ado, let's get started!
 
 ## What is A-Frame?
-A-Frame is a WebVR framework for building rich 3D experiences on the web. It's built on top of three.js, an advanced 3D JavaScript library that makes working with WebGL extremely fun. The catch is that A-Frame lets you build WebVR apps without writing a single line of JavaScript (to some extent). You can create a basic scene in a few minutes writing a [couple lines of HTML](https://codepen.io/prayasht/pen/EvderE?editors=1000). It provides an excellent HTML API for you to scaffold out the scene, while still giving you full flexibility by letting you access the rich three.js API that powers it. In my opinion, A-Frame strikes an excellent balance of abstraction this way.
-
-I won't go into more detail about how A-Frame works. You can learn all about it straight from the horse's mouth. The [documentation](https://aframe.io/docs/0.6.0/introduction/) is an excellent place for that.
+A-Frame is a WebVR framework for building rich 3D experiences on the web. It's built on top of three.js, an advanced 3D JavaScript library that makes working with WebGL extremely fun. The catch is that A-Frame lets you build WebVR apps without writing a single line of JavaScript (to some extent). You can create a basic scene in a few minutes writing a [couple lines of HTML](https://codepen.io/prayasht/pen/EvderE?editors=1000). It provides an excellent HTML API for you to scaffold out the scene, while still giving you full flexibility by letting you access the rich three.js API that powers it. In my opinion, A-Frame strikes an excellent balance of abstraction this way. The [documentation](https://aframe.io/docs/0.6.0/introduction/) is an excellent place to learn more about it in detail.
 
 ## Setup
-The first thing we're gonna be doing is getting A-Frame and React set up. I've already gone ahead and done that for you so you can simply clone [this repo](https://github.com/prayasht/aframe-preact-starter), cd into it, and run `yarn install` to get all the required dependencies. For this app, we're actually going to be using [Preact](http://preactjs.com), a fast and lightweight alternative to React, in order to reduce our bundle size. Dont worry, it's still the same API so if you've worked with React before then you shouldn't notice any differences. Go ahead and run `yarn start` to fire up the development server. Hit up http://localhost:3333 and you should be presented with a basic scene including a cube and some text. Now on to the fun stuff.
+The first thing we're going to be doing is setting up A-Frame and React. I've already gone ahead and done that for you so you can simply clone [this repo](https://github.com/prayasht/aframe-preact-starter), `cd` into it, and run `yarn install` or `npm install` to get all the required dependencies. For this app, we're actually going to be using [Preact](http://preactjs.com), a fast and lightweight alternative to React, in order to reduce our bundle size. Dont worry, it's still the same API so if you've worked with React before then you shouldn't notice any differences. Go ahead and run `yarn start` or `npm start` to fire up the development server. Hit up http://localhost:3333 and you should be presented with a basic scene including a cube and some text. Now on to the fun stuff.
 
 ## Building Blocks
 Fire up the editor and inspect the file `app/main.js`, that's where we'll be building out our scene. Let's take a second to break this down.
 
 The Scene component is the root node of an A-Frame app. It's what creates the stage for you to place 3D objects in, initializes the camera, and renderer and handles other boilerplate. It should be the outermost element wrapping everything else inside it. You can think of `Entity` like an HTML `div`. Entities are the basic building blocks of an A-Frame `Scene`. Every object inside the A-Frame scene is an `Entity`.
 
-A-Frame is built on the [Entity-component-system](https://en.wikipedia.org/wiki/Entity-component-system) (ECS) architecture, a very common pattern utlizied in 3D and game development most notably popularized by [Unity](https://unity3d.com/), a powerful game engine. What ECS means in the context of an A-Frame app is that we create a bunch of Entities that quite literally do nothing, and attach components to them to describe their behavior and looks. Because we're using React, this means that we'll be passing props into our `Entity` to tell it what to render. For example, passing in `a-box` as the value of the prop `primitive` will render a box for us. Then we can pass in other values for attributes like position, rotation, material, size, etc. Basically, anything listed in the A-Frame [documentation](https://aframe.io/docs/0.6.0/core/entity.html) is fair game. I hope you can see how powerful this really is. You're grabbing just the bits of functionality you need and attaching them to Entities. It gives us maximum flexibility and reusability of code, and is very easy to reason about.
+A-Frame is built on the [Entity-component-system](https://en.wikipedia.org/wiki/Entity-component-system) (ECS) architecture, a very common pattern utlizied in 3D and game development most notably popularized by [Unity](https://unity3d.com/), a powerful game engine. What ECS means in the context of an A-Frame app is that we create a bunch of Entities that quite literally do nothing, and attach components to them to describe their behavior and looks. Because we're using React, this means that we'll be passing props into our `Entity` to tell it what to render. For example, passing in `a-box` as the value of the prop `primitive` will render a box for us. Then we can pass in other values for attributes like position, rotation, material, size, etc. Basically, anything listed in the A-Frame [documentation](https://aframe.io/docs/0.6.0/core/entity.html) is fair game. I hope you see how powerful this really is. You're grabbing just the bits of functionality you need and attaching them to Entities. It gives us maximum flexibility and reusability of code, and is very easy to reason about.
 
 ## But, Why React?
-Sooooo, all we need is markup and a few scripts. What's the point of using React, anyway? Well, if you wanted to attach state to these objects, then manually doing it would be a lot of hard work. A-Frame handles almost all of its rendering through the use of HTML attributes (or components as mentioned above), and updating different attributes of many objects in your scene manually can be a massive headache. Since React is excellent at binding state to markup, diffing it for you, and re-rendering, we'll be taking advantage of that. Keep in mind that we won't be handling any WebGL render calls or manipulating the animation loop with React, that's not what it's good at and it's not its job. A-Frame has a built in animation engine that handles that for us. We just need to pass in the appropriate props and let it do the hard work for us. See how this is pretty much like creating your ordinary React app, except the result is WebGL instead of raw markup? Enough with the talking, let's write some code.
+Sooooo, all we need is markup and a few scripts. What's the point of using React, anyway? Well, if you wanted to attach state to these objects, then manually doing it would be a lot of hard work. A-Frame handles almost all of its rendering through the use of HTML attributes (or components as mentioned above), and updating different attributes of many objects in your scene manually can be a massive headache. Since React is excellent at binding state to markup, diffing it for you, and re-rendering, we'll be taking advantage of that. Keep in mind that we won't be handling any WebGL render calls or manipulating the animation loop with React. A-Frame has a built in animation engine that handles that for us. We just need to pass in the appropriate props and let it do the hard work for us. See how this is pretty much like creating your ordinary React app, except the result is WebGL instead of raw markup? Well, technically, it is still markup. But A-Frame converts that to WebGL for us. Enough with the talking, let's write some code.
 
 ## Setting Up the Scene
-The first thing to do is to establish an environment. Let's start with a blank slate. Delete everything inside the `Scene` tags. 
-For the sake of making things look interesting right away, we'll utilize a third-party component to generate a nice environment for us. Let's import that component from the `lib` directory and attach the component to our scene. I've hand-coded some nice defaults for us to get started, but feel free to modify to your taste. As an aside, you can press `CTRL + ALT + I` to load up the A-Frame Scene Inspector and change parameters in real-time. I find this super handy in the initial stage when designing the app. Our file should now look something like:
+The first thing we should do is to establish an environment. Let's start with a blank slate. Delete everything inside the `Scene` element. For the sake of making things look interesting right away, we'll utilize a 3rd party component to generate a nice environment for us. 3rd party components pack a lot of WebGL code inside them, but expose a very simple interface in the markup. It's already been imported in the `app/intialize.js` file so all we need to do is attach it to the `Scene` element. I've already configured some nice defaults for us to get started, but feel free to modify to your taste. As an aside, you can press `CTRL + ALT + I` to load up the A-Frame Scene Inspector and change parameters in real-time. I find this super handy in the initial stage when designing the app. Our file should now look something like:
 
 ```javascript
-import 'aframe'
 import { h, Component } from 'preact'
 import { Entity, Scene } from 'aframe-react'
-import '../lib/aframe-environment-component'
-import '../lib/aframe-particle-system'
 
 class App extends Component {
   render() {
@@ -53,13 +47,13 @@ class App extends Component {
           grid: 'none'
         }}
       >
-        <Entity>
       </Scene>
     )
   }
 }
 ```
-Was that too easy? That's the power of A-Frame components. Don't worry. We'll dive into writing some of our own stuff from scratch later on. We might as well take care of the camera and the cursor here. We define another `Entity`
+
+Was that too easy? That's the power of A-Frame components. Don't worry. We'll dive into writing some of our own stuff from scratch later on. We might as well take care of the camera and the cursor here. Let's define another `Entity` inside the `Scene` tags. This time, we'll pass in different primitives (`a-camera` and `a-cursor`).
 
 ```javascript
 <Entity primitive="a-camera" wasd-controls-enabled={false}>
@@ -72,8 +66,10 @@ Was that too easy? That's the power of A-Frame components. Don't worry. We'll di
 </Entity>
 ```
 
+See how readable and user-friendly this is? It's practically English. You can look up every single prop I've used in the A-Frame docs.
+
 ## Populating the Environment
-Now that we've got this sweet scene set up, we can populate it with objects. They can be basic 3D geometry objects like a box, sphere, cylinder, octahedron, or even a custom 3D model. For the sake of simplicity, we'll use of the defaults provided by A-Frame, and then write out own component and attach it to the default object to customize it. Let's build a low poly count sphere because they look cool and work out of the box. We'll define another entity and pass in our attributes to make it look the way we want. We'll be using the `a-octahedron` primitive for this. 
+Now that we've got this sweet scene set up, we can populate it with objects. They can be basic 3D geometry objects like cubes, spheres, cylinders, octahedrons, or even custom 3D models. For the sake of simplicity, we'll use of the defaults provided by A-Frame, and then write our own component and attach it to the default object to customize it. Let's build a low poly count sphere because they look cool. We'll define another entity and pass in our attributes to make it look the way we want. We'll be using the `a-octahedron` primitive for this. This snippet of code will live in-between the `Scene` tags as well.
 
 ```javascript
 <Entity
@@ -85,13 +81,24 @@ Now that we've got this sweet scene set up, we can populate it with objects. The
 />
 ```
 
-## Building Your First A-Frame Component
-Baby steps. Now let's take it up a notch and build our own custom A-Frame component from scratch. This component will alter the appearance of our object, and also attach interactive behavior to it. Our component will take the provided shape, and create a slightly bigger wireframe of the same shape on top of it. That'll give it a really neat meshy (is that even a word?) look. To do that, we'll define our component in a new js file.
+You may just be seeing a dark sphere now. We need some lighting. Let there be light:
+```javascript
+<Entity
+  primitive="a-light"
+  type="directional"
+  color="#FFF"
+  intensity={1}
+  position={{ x: 2.5, y: 0.0, z: 0.0 }}
+/>
+```
 
-Open up `app/components/aframe-meshy-component.js`. First, we'll register the component using the global `AFRAME` reference, define our schema for the component, and add our three.js code inside the `init` function. You can think of schema as arguments, or properties that can be passed to the component. We'll be passing in a few options like color, opacity, and other visual properties. The init function will run as soon as the component gets attached to the Entity. The boilerplate for a A-Frame component looks like:
+## Building Your First A-Frame Component
+Baby steps. We now have a 3D object and an environment that we can walk/look around in. Now let's take it up a notch and build our own custom A-Frame component from scratch. This component will alter the appearance of our object, and also attach interactive behavior to it. Our component will take the provided shape, and create a slightly bigger wireframe of the same shape on top of it. That'll give it a really neat geometric, meshy (is that even a word?) look. To do that, we'll define our component in a new js file `app/components/aframe-meshy-component.js`.
+
+First, we'll register the component using the global `AFRAME` reference, define our schema for the component, and add our three.js code inside the `init` function. You can think of schema as arguments, or properties that can be passed to the component. We'll be passing in a few options like color, opacity, and other visual properties. The `init` function will run as soon as the component gets attached to the Entity. The template for our A-Frame component looks like:
 
 ```javascript
-AFRAME.registerComponent('frame', {
+AFRAME.registerComponent('lowpoly', {
   schema: {
     // Here we define our properties, their types and default values
     color: { type: 'string', default: '#FFF' },
@@ -125,7 +132,7 @@ init: function() {
   })
 
   // Define the geometry for the outer wireframe
-  const frameGeom = new THREE.OctahedronGeometry(3, 2)
+  const frameGeom = new THREE.OctahedronGeometry(2.5, 2)
 
   // Define the material for it
   const frameMat = new THREE.MeshPhongMaterial({
@@ -180,38 +187,98 @@ init: function() {
 }
 ```
 
-## Adding Interactivity
-We have our scene, and we've placed our objects. They look the way we want. Now what? This is still very static. Let's add some user input!
-
-A-Frame comes with a fully functional raycaster out of the box. [Raycasting](https://en.wikipedia.org/wiki/Ray_casting) gives us the abiltiy to trigger events when an object is 'gazed at' or 'clicked on' with our cursor. Again, you don't have to worry about how it's implemented. Although the math behind it is fascinating, we simply don't have to worry about it as it's out of the scope of this tutorial. Just know what it is and how to use it. To add a raycaster, we provide the `raycaster` prop to the camera with the classes of objects which we want to be clickable. Our camera node should now look like:
+Let's go back to the markup to reflect tha changes we've made to the component. We'll add a `lowpoly` prop to our Entity and give it an object of the parameters we defined in our schema. It should now look like:
 ```javascript
-<Entity primitive="a-camera" wasd-controls-enabled={false}>
+<Entity
+  lowpoly={{
+    color: '#D92B6A',
+    nodes: true,
+    opacity: 0.15,
+    wireframe: true
+  }}
+  primitive="a-octahedron"
+  detail={2}
+  radius={2}
+  position={{ x: 0.0, y: 4, z: -10.0 }}
+  color="#FAFAF1"
+/>
+```
+
+## Adding Interactivity
+We have our scene, and we've placed our objects. They look the way we want. Now what? This is still very static. Let's add some user input by changing the color of the sphere every time it gets clicked on.
+
+A-Frame comes with a fully functional raycaster out of the box. [Raycasting](https://en.wikipedia.org/wiki/Ray_casting) gives us the abiltiy to detect when an object is 'gazed at' or 'clicked on' with our cursor, and execute code based on those events. Although the math behind it is fascinating, we don't have to worry about how it's implemented. Just know what it is and how to use it. To add a raycaster, we provide the `raycaster` prop to the camera with the class of objects which we want to be clickable. Our camera node should now look like:
+
+```javascript
+<Entity primitive="a-camera" look-controls>
   <Entity
     primitive="a-cursor"
-    cursor={{
-      color: 'white',
-      fuse: false,
-      fuseTimeout: 500
-    }}
-    material={{
-      color: 'white',
-      shader: 'flat'
-    }}
-    event-set__1="_event: mouseenter; color: black"
-    event-set__2="_event: mouseleave; color: white"
+    cursor={{ fuse: false }}
+    material={{ color: 'white', shader: 'flat', opacity: 0.75 }}
+    geometry={{ radiusInner: 0.005, radiusOuter: 0.007 }}
+    event-set__1="_event: mouseenter; scale: 1.4 1.4 1.4"
+    event-set__2="_event: mouseleave; scale: 1 1 1"
     raycaster="objects: .clickable"
   />
 </Entity>
 ```
 
+We've also added some feedback by scaling the cursor when it enters and leaves an object targeted by the raycaster. Now go back and add a `class="clickable"` prop to the 3D sphere Entity we created a bit ago. While you're at it, attach an event handler so we can respond to clicks accordingly.
+
+```javascript
+ <Entity
+  class="clickable"
+  // ... all the other props we've already added before
+  events={{
+    click: this._handleClick.bind(this)
+  }}
+/>
+```
+
+Now let's define this `_handleClick` function. Outside of the `render` call, define it and change the state of the app. We're just cycling between the numbers of 0 - 2.
+
+```javascript
+_handleClick() {
+  this.setState({
+    colorIndex: (this.state.colorIndex + 1) % COLORS.length
+  })
+}
+```
+
+Great, now we're changing the state of app. Let's hook that up to the A-Frame object. Use the `colorIndex` variable to cycle through a globaly defined array of colors. I've already added that for you so you just need to change the `color` prop of the sphere Entity we created. Like so:
+
+```javascript
+<Entity
+  class="clickable"
+  lowpoly={{
+    color: COLORS[this.state.colorIndex],
+  // The rest stays the same!
+/>
+```
+
 ## Animating Objects
-Let's animate all the things. We can utilize the [aframe-animation-component](https://github.com/ngokevin/kframe/tree/master/components/animation/) to make this happen. It's already been imported so let's add that functionality to our low poly sphere (planes, technically). The play and pause button should now look like:
+Let's animate all the things. We can utilize the [aframe-animation-component](https://github.com/ngokevin/kframe/tree/master/components/animation/) to make this happen. It's already been imported so let's add that functionality to our low poly sphere. To the same Entity, add another prop called `animation__rotate`. That's just a name we give it, you can call it whatever. The inner properties we pass are what's important. In this case, it rotates the sphere by 360 degrees on the Y axis.
+
+```javascript
+<Entity
+  class="clickable"
+  lowpoly
+  // A whole buncha props that we wrote already...
+  animation__rotate={{
+    property: 'rotation',
+    dur: 60000,
+    easing: 'linear',
+    loop: true,
+    to: { x: 0, y: 360, z: 0 }
+  }}
+/>
+```
 
 ## Polishing Up
-This is a WebGL rabbit hole. Post-processing effects in WebGL are extremely fast and can add a lot of character to your scene. There are many shaders available for use depending on the aesthetic you're going for. You can very easily overdo it but even something subtle can give a lot of life to your scene. If you want to add post-processing effects to your scene, you can utilize the additional shaders provided by three.js to do so. Some of my favorites are the bloom, blur, and static TV shaders. Let's run through that very briefly here.
+We're almost there! Post-processing effects in WebGL are extremely fast and can add a lot of character to your scene. There are many shaders available for use depending on the aesthetic you're going for. If you want to add post-processing effects to your scene, you can utilize the additional shaders provided by three.js to do so. Some of my favorites are the bloom, blur, and static TV shaders. Let's run through that very briefly here.
 
 ## Deployment
-If you look inside the `bin/` directory, there should be a bash script named deploy.sh. We'll be executing this in order to deploy to the `gh-pages` branch of our project.
+If you're still reading this, I congratulate you. It's time to deploy. The final step in any piece of art is letting it go live by itself on someone else's server and not your dev server. We'll use the super awesome tool called surge to make this painfully painless.
 
 ## Fin
 I hope you enjoyed this tutorial and you see the power of A-Frame and its capabilities. By utilizing third-party components and cooking up our own, we can create something decent with relative ease. We've only scratched the surface, and now it's up to you to explore the rest. As 2D content fails to meet the rising demand for immersive content on the web, tools like A-Frame and three.js have come into the limelight. The future of WebVR is looking bright. Go on now, unleash your creativity, for the browser is an empty 3D canvas. If you end up making something cool, feel free to tweet [@_prayash](http://twitter.com/_prayash) and [@aframevr](http://twitter.com/aframevr) so we all can see it too.

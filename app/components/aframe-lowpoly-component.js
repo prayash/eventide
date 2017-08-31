@@ -1,4 +1,4 @@
-AFRAME.registerComponent('frame', {
+AFRAME.registerComponent('lowpoly', {
   schema: {
     color: { type: 'string', default: '#FFF' },
     nodes: { type: 'boolean', default: false },
@@ -20,7 +20,7 @@ AFRAME.registerComponent('frame', {
     })
 
     // Define the geometry for the outer wireframe
-    const frameGeom = new THREE.OctahedronGeometry(3, 2)
+    const frameGeom = new THREE.OctahedronGeometry(2.5, 2)
 
     // Define the material for it
     const frameMat = new THREE.MeshPhongMaterial({
@@ -44,7 +44,7 @@ AFRAME.registerComponent('frame', {
 
     // If the nodes attribute is set to true
     if (this.data.nodes) {
-      let spheres = []
+      let spheres = new THREE.Group()
       let vertices = icosFrame.geometry.vertices
 
       // Traverse the vertices of the wireframe and attach small spheres
@@ -59,18 +59,24 @@ AFRAME.registerComponent('frame', {
         })
 
         let sphere = new THREE.Mesh(geometry, material)
-
-        spheres.push(sphere)
-
         // Reposition them correctly
-        spheres[i].position.set(
+        sphere.position.set(
           vertices[i].x,
           vertices[i].y + 4,
           vertices[i].z + -10.0
         )
 
-        scene.add(spheres[i])
+        spheres.add(sphere)
       }
+      scene.add(spheres)
+      this.data.spheres = spheres
     }
+  },
+
+  update: function() {
+    const obj = this.el.getObject3D('mesh')
+
+    // Modify the color of the material during runtime
+    obj.material.color = new THREE.Color(this.data.color)
   }
 })

@@ -7,7 +7,8 @@
 
 import 'aframe'
 import 'aframe-animation-component'
-import './components/aframe-frame-component'
+import 'aframe-event-set-component'
+import './components/aframe-lowpoly-component'
 import './components/aframe-environment-component'
 import { h, render } from 'preact'
 import Main from './main'
