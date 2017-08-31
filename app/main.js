@@ -43,6 +43,15 @@ class Main extends Component {
           color="#FFF"
           intensity={1}
           position={{ x: 2.5, y: 0.0, z: 0.0 }}
+          animation__oscillate={{
+            property: 'position',
+            dur: 2000,
+            dir: 'alternate',
+            easing: 'linear',
+            loop: true,
+            from: { x: 2.5, y: 0.0, z: 0.0 },
+            to: { x: 3.0, y: 0.25, z: 0.0 }
+          }}
         />
 
         <Entity

@@ -1,6 +1,6 @@
 {
-  "name": "A-Frame-Preact",
-  "description": "A boilerplate project for getting started with WebVR using A-Frame and Preact",
+  "name": "aframe-demo",
+  "description": "A simple scene built in A-Frame and Preact.",
   "private": true,
   "author": "Prayash Thapa",
   "homepage": "http://effulgence.io/",
@@ -9,7 +9,7 @@
   "scripts": {
     "start": "brunch watch --server",
     "build": "brunch build --production",
-    "deploy": "ghpages -d public"
+    "deploy": "surge"
   },
   "dependencies": {
     "aframe": "^0.6.0",
