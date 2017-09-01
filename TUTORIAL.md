@@ -2,13 +2,16 @@
 
 ### Building VR apps has never been easier. Combine that with the power and accessibility of the web, and you get WebVR.
 
-Today, we'll be running through a short tutorial on creating our own WebVR application using [A-Frame](https://aframe.io/) and [React](https://facebook.github.io/react/). We'll cover the setup process, build out a basic scene, and add interactive elements and animations. A-Frame has an excellent third-party component registry, so we will be using some of those in addition to writing one from scratch. In the end, we'll go through the deployment process through [surge](https://surge.sh/) so that you can share your app with the world and test it out live on your smartphone (or Google Cardboard if you have one available). For reference, the final code is [here](https://github.com/prayasht/aframe-demo) in case you get lost. Over the course of this tutorial, we will be building a scene like this.
+Today, we'll be running through a short tutorial on creating our own WebVR application using [A-Frame](https://aframe.io/) and [React](https://facebook.github.io/react/). We'll cover the setup process, build out a basic 3D scene, and add interactivity and animation. A-Frame has an excellent third-party component registry, so we will be using some of those in addition to writing one from scratch. In the end, we'll go through the deployment process through [surge](https://surge.sh/) so that you can share your app with the world and test it out live on your smartphone (or Google Cardboard if you have one available). For reference, the final code is [here](https://github.com/prayasht/aframe-demo) in case you get lost. Over the course of this tutorial, we will be building a scene like this.
 
-[Insert CodePen!]
+![A-Frame Demo](img/aframe-sunset.png "A-Frame Demo")
 
 Exciting, right? Without further ado, let's get started!
 
 ## What is A-Frame?
+
+![A-Frame Homepage](img/aframe-homepage.png "A-Frame Homepage")
+
 A-Frame is a framework for building rich 3D experiences on the web. It's built on top of three.js, an advanced 3D JavaScript library that makes working with WebGL extremely fun. The cool part is that A-Frame lets you build WebVR apps without writing a single line of JavaScript (to some extent). You can create a basic scene in a few minutes writing a [couple lines of HTML](https://codepen.io/prayasht/pen/EvderE?editors=1000). It provides an excellent HTML API for you to scaffold out the scene, while still giving you full flexibility by letting you access the rich three.js API that powers it. In my opinion, A-Frame strikes an excellent balance of abstraction this way. The [documentation](https://aframe.io/docs/0.6.0/introduction/) is an excellent place to learn more about it in detail.
 
 ## Setup
