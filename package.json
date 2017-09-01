@@ -5,7 +5,7 @@
   "author": "Prayash Thapa",
   "homepage": "http://effulgence.io/",
   "version": "1.0.0",
-  "repository": "https://github.com/prayasht/aframe-preact-starter/",
+  "repository": "https://github.com/prayasht/eventide/",
   "scripts": {
     "start": "brunch watch --server",
     "build": "brunch build --production",
