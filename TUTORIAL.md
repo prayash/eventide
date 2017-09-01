@@ -19,7 +19,9 @@ A-Frame is a framework for building rich 3D experiences on the web. It's built o
 ## Setup
 The first thing we're going to be doing is setting up A-Frame and React. I've already gone ahead and done that for you so you can simply clone [this repo](https://github.com/prayasht/aframe-preact-starter), `cd` into it, and run `yarn install` to get all the required dependencies. For this app, we're actually going to be using [Preact](http://preactjs.com), a fast and lightweight alternative to React, in order to reduce our bundle size. Dont worry, it's still the same API so if you've worked with React before then you shouldn't notice any differences. Go ahead and run `yarn start` to fire up the development server. Hit up http://localhost:3333 and you should be presented with a basic scene including a spinning cube and some text. I highly suggest that you spend some time going through the README in that repo. It has some essential information about A-Frame and React. It also goes more into detail on what and how to install everything. Now on to the fun stuff.
 
-![A-Frame Setup](img/aframe-setup.png "A-Frame Setup")
+<p align="center">
+  <img src="img/aframe-setup.png" alt="A-Frame Setup">
+</p>
 
 ## Building Blocks
 Fire up the editor on the root of the project directory and inspect the file `app/main.js`, that's where we'll be building out our scene. Let's take a second to break this down.
@@ -28,7 +30,9 @@ The `Scene` component is the root node of an A-Frame app. It's what creates the 
 
 A-Frame is built on the [Entity-component-system](https://en.wikipedia.org/wiki/Entity-component-system) (ECS) architecture, a very common pattern utilized in 3D and game development most notably popularized by [Unity](https://unity3d.com/), a powerful game engine. What ECS means in the context of an A-Frame app is that we create a bunch of Entities that quite literally do nothing, and attach components to them to describe their behavior and appearance. Because we're using React, this means that we'll be passing props into our `Entity` to tell it what to render. For example, passing in `a-box` as the value of the prop `primitive` will render a box for us. Same goes for `a-sphere`, or `a-cylinder`. Then we can pass in other values for attributes like `position`, `rotation`, `material`, `height`, etc. Basically, anything listed in the A-Frame [documentation](https://aframe.io/docs/0.6.0/core/entity.html) is fair game. I hope you see how powerful this really is. You're grabbing just the bits of functionality you need and attaching them to Entities. It gives us maximum flexibility and reusability of code, and is very easy to reason about. This is called [composition over inheritance](https://en.wikipedia.org/wiki/Composition_over_inheritance).
 
-![Entity-component-system](img/ecs.png "Entity-component-system")
+<p align="center">
+  <img src="img/ecs.png" alt="Entity-component-system">
+</p>
 
 ## But, Why React?
 Sooooo, all we need is markup and a few scripts. What's the point of using React, anyway? Well, if you wanted to attach state to these objects, then manually doing it would be a lot of hard work. A-Frame handles almost all of its rendering through the use of HTML attributes (or components as mentioned above), and updating different attributes of many objects in your scene manually can be a massive headache. Since React is excellent at binding state to markup, diffing it for you, and re-rendering, we'll be taking advantage of that. Keep in mind that we won't be handling any WebGL render calls or manipulating the animation loop with React. A-Frame has a built in animation engine that handles that for us. We just need to pass in the appropriate props and let it do the hard work for us. See how this is pretty much like creating your ordinary React app, except the result is WebGL instead of raw markup? Well, technically, it is still markup. But A-Frame converts that to WebGL for us. Enough with the talking, let's write some code.
