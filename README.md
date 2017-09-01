@@ -1,4 +1,4 @@
-<h1 align="center">aframe-preact</h1>
+<h1 align="center">eventide | aframe-preact</h1>
 
 <br/>
 
