@@ -4,7 +4,9 @@
 
 Today, we'll be running through a short tutorial on creating our own WebVR application using [A-Frame](https://aframe.io/) and [React](https://facebook.github.io/react/). We'll cover the setup process, build out a basic 3D scene, and add interactivity and animation. A-Frame has an excellent third-party component registry, so we will be using some of those in addition to writing one from scratch. In the end, we'll go through the deployment process through [surge](https://surge.sh/) so that you can share your app with the world and test it out live on your smartphone (or Google Cardboard if you have one available). For reference, the final code is in [this repo](https://github.com/prayasht/eventide). Over the course of this tutorial, we will be building a scene like this. Check out the [live demo](http://eventide.surge.sh) as well.
 
-![A-Frame Eventide Demo](img/eventide.gif "A-Frame Eventide Demo")
+<p align="center">
+  <img src="img/eventide.gif" alt="A-Frame Eventide Demo">
+</p>
 
 Exciting, right? Without further ado, let's get started!
 
