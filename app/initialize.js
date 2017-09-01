@@ -11,6 +11,7 @@ import 'aframe-event-set-component'
 import './components/aframe-lowpoly'
 import './components/aframe-environment'
 import './components/aframe-effects'
+
 import { h, render } from 'preact'
 import Main from './main'
 
