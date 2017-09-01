@@ -2,7 +2,7 @@
 
 ### Building VR apps has never been easier. Combine that with the power and accessibility of the web, and you get WebVR.
 
-Today, we'll be running through a short tutorial on creating our own WebVR application using [A-Frame](https://aframe.io/) and [React](https://facebook.github.io/react/). We'll cover the setup process, build out a basic 3D scene, and add interactivity and animation. A-Frame has an excellent third-party component registry, so we will be using some of those in addition to writing one from scratch. In the end, we'll go through the deployment process through [surge](https://surge.sh/) so that you can share your app with the world and test it out live on your smartphone (or Google Cardboard if you have one available). For reference, the final code is [here](https://github.com/prayasht/aframe-demo) in case you get lost. Over the course of this tutorial, we will be building a scene like this.
+Today, we'll be running through a short tutorial on creating our own WebVR application using [A-Frame](https://aframe.io/) and [React](https://facebook.github.io/react/). We'll cover the setup process, build out a basic 3D scene, and add interactivity and animation. A-Frame has an excellent third-party component registry, so we will be using some of those in addition to writing one from scratch. In the end, we'll go through the deployment process through [surge](https://surge.sh/) so that you can share your app with the world and test it out live on your smartphone (or Google Cardboard if you have one available). For reference, the final code is [here](https://github.com/prayasht/eventide) in case you get lost. Over the course of this tutorial, we will be building a scene like this. Live demo [here](http://eventide.surge.sh).
 
 ![A-Frame Demo](img/aframe-sunset.png "A-Frame Demo")
 
@@ -23,6 +23,8 @@ Fire up the editor on the root of the project directory and inspect the file `ap
 The Scene component is the root node of an A-Frame app. It's what creates the stage for you to place 3D objects in, initializes the camera, and renderer and handles other boilerplate. It should be the outermost element wrapping everything else inside it. You can think of `Entity` like an HTML `div`. Entities are the basic building blocks of an A-Frame `Scene`. Every object inside the A-Frame scene is an `Entity`.
 
 A-Frame is built on the [Entity-component-system](https://en.wikipedia.org/wiki/Entity-component-system) (ECS) architecture, a very common pattern utilized in 3D and game development most notably popularized by [Unity](https://unity3d.com/), a powerful game engine. What ECS means in the context of an A-Frame app is that we create a bunch of Entities that quite literally do nothing, and attach components to them to describe their behavior and appearance. Because we're using React, this means that we'll be passing props into our `Entity` to tell it what to render. For example, passing in `a-box` as the value of the prop `primitive` will render a box for us. Then we can pass in other values for attributes like position, rotation, material, size, etc. Basically, anything listed in the A-Frame [documentation](https://aframe.io/docs/0.6.0/core/entity.html) is fair game. I hope you see how powerful this really is. You're grabbing just the bits of functionality you need and attaching them to Entities. It gives us maximum flexibility and reusability of code, and is very easy to reason about. This is called [composition over inheritance](https://en.wikipedia.org/wiki/Composition_over_inheritance).
+
+![Entity-component-system](img/aframe-ecs.png "Entity-component-system")
 
 ## But, Why React?
 Sooooo, all we need is markup and a few scripts. What's the point of using React, anyway? Well, if you wanted to attach state to these objects, then manually doing it would be a lot of hard work. A-Frame handles almost all of its rendering through the use of HTML attributes (or components as mentioned above), and updating different attributes of many objects in your scene manually can be a massive headache. Since React is excellent at binding state to markup, diffing it for you, and re-rendering, we'll be taking advantage of that. Keep in mind that we won't be handling any WebGL render calls or manipulating the animation loop with React. A-Frame has a built in animation engine that handles that for us. We just need to pass in the appropriate props and let it do the hard work for us. See how this is pretty much like creating your ordinary React app, except the result is WebGL instead of raw markup? Well, technically, it is still markup. But A-Frame converts that to WebGL for us. Enough with the talking, let's write some code.
@@ -79,7 +81,7 @@ Was that too easy? That's the power of A-Frame components. Don't worry. We'll di
 </Entity>
 ```
 
-See how readable and user-friendly this is? It's practically English. You can look up every single prop I've used in the A-Frame docs.
+See how readable and user-friendly this is? It's practically English. You can look up every single prop here in the A-Frame docs. Instead of string attributes, I'm passing in objects.
 
 ## Populating the Environment
 Now that we've got this sweet scene set up, we can populate it with objects. They can be basic 3D geometry objects like cubes, spheres, cylinders, octahedrons, or even custom 3D models. For the sake of simplicity, we'll use of the defaults provided by A-Frame, and then write our own component and attach it to the default object to customize it. Let's build a low poly count sphere because they look cool. We'll define another entity and pass in our attributes to make it look the way we want. We'll be using the `a-octahedron` primitive for this. This snippet of code will live in-between the `Scene` tags as well.
@@ -324,6 +326,7 @@ animation__oscillate={{
   }
 }}
 ```
+
 ## Polishing Up
 We're almost there! Post-processing effects in WebGL are extremely fast and can add a lot of character to your scene. There are many shaders available for use depending on the aesthetic you're going for. If you want to add post-processing effects to your scene, you can utilize the additional shaders provided by three.js to do so. Some of my favorites are the bloom, blur, and noise shaders. Let's run through that very briefly here.
 
@@ -339,10 +342,10 @@ Post-processing effects operate on your scene as a whole. Think of it as a bitma
 />
 ```
 
-Boom. we're done. There's an obscene amount of shader math going on behind the scene (pun intended), but you don't need to know any of it. That's the beauty of abstraction. If you're curious you can always dig into the source files and look at the shader wizardry that's happening. It's a world of its own. We're pretty much done here. Onto the final step...
+Boom. we're done. There's an obscene amount of shader math going on behind the scene (pun intended), but you don't need to know any of it. That's the beauty of abstraction. If you're curious you can always dig into the source files and look at the shader wizardry that's happening back there. It's a world of its own. We're pretty much done here. Onto the final step...
 
 ## Deployment
-It's time to deploy. The final step is letting it live on someone else's server and not your dev server. We'll use the super awesome tool called surge to make this painfully easy. First, we need a production build of our app. Run `yarn build`. The final build will be outputted to the `public/` directory Install surge by running `npm install -g surge`. Navigate to the `public` directory and run `surge` on your command line. It should prompt you to log in, or create an account. The rest should be very straightforward, and you will get a URL of your deployed site at the ending prompt. That's it. I've hosted mine [http://aframe-demo.surge.sh](http://aframe-demo.surge.sh).
+It's time to deploy. The final step is letting it live on someone else's server and not your dev server. We'll use the super awesome tool called surge to make this painfully easy. First, we need a production build of our app. Run `yarn build`. It will output final build to the `public/` directory. Install surge by running `npm install -g surge`. Now run `surge public/` to push the contents of that directory live. It should prompt you to log in or create an account and you'll have the choice to change your domain name. The rest should be very straightforward, and you will get a URL of your deployed site at the ending prompt. That's it. I've hosted mine [http://eventide.surge.sh](http://eventide.surge.sh).
 
 ## Fin
 I hope you enjoyed this tutorial and you see the power of A-Frame and its capabilities. By combining third-party components and cooking up our own, we can create something decent with relative ease. Extending all this with React, we're able to manage state efficiently and go crazy with dynamic props. We've only scratched the surface, and now it's up to you to explore the rest. As 2D content fails to meet the rising demand for immersive content on the web, tools like A-Frame and three.js have come into the limelight. The future of WebVR is looking bright. Go forth and unleash your creativity, for the browser is an empty 3D canvas and code is your brush. If you end up making something cool, please tweet me [@_prayash](http://twitter.com/_prayash) and A-Frame [@aframevr](http://twitter.com/aframevr) so we all can see it too.
