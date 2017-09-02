@@ -2,7 +2,7 @@
 
 ### Building VR apps has never been easier. Combine that with the power and accessibility of the web, and you get WebVR.
 
-Today, we'll be running through a short tutorial on creating our own WebVR application using [A-Frame](https://aframe.io/) and [React](https://facebook.github.io/react/). We'll cover the setup process, build out a basic 3D scene, and add interactivity and animation. A-Frame has an excellent third-party component registry, so we will be using some of those in addition to writing one from scratch. In the end, we'll go through the deployment process through [surge](https://surge.sh/) so that you can share your app with the world and test it out live on your smartphone (or Google Cardboard if you have one available). For reference, the final code is in [this repo](https://github.com/prayasht/eventide). Over the course of this tutorial, we will be building a scene like this. Check out the [live demo](http://eventide.surge.sh) as well.
+Today, we'll be running through a short tutorial on creating our own WebVR application using [A-Frame](https://aframe.io/) and [React](https://facebook.github.io/react/). We'll cover the setup process, build out a basic 3D scene, and add interactivity and animation. A-Frame has an excellent third-party component registry, so we will be using some of those in addition to writing one from scratch. In the end, we'll go through the deployment process through [surge.sh](https://surge.sh/) so that you can share your app with the world and test it out live on your smartphone (or Google Cardboard if you have one available). For reference, the final code is in [this repo](https://github.com/prayasht/eventide). Over the course of this tutorial, we will be building a scene like this. Check out the [live demo](http://eventide.surge.sh) as well.
 
 <p align="center">
   <img src="img/eventide.gif" alt="A-Frame Eventide Demo">
@@ -12,7 +12,7 @@ Exciting, right? Without further ado, let's get started!
 
 ## What is A-Frame?
 
-![A-Frame Homepage](img/aframe-banner.png "A-Frame Homepage")
+![A-Frame Banner](img/aframe-banner.png "A-Frame Banner")
 
 A-Frame is a framework for building rich 3D experiences on the web. It's built on top of three.js, an advanced 3D JavaScript library that makes working with WebGL extremely fun. The cool part is that A-Frame lets you build WebVR apps without writing a single line of JavaScript (to some extent). You can create a basic scene in a few minutes writing a [couple lines of HTML](https://codepen.io/prayasht/pen/EvderE?editors=1000). It provides an excellent HTML API for you to scaffold out the scene, while still giving you full flexibility by letting you access the rich three.js API that powers it. In my opinion, A-Frame strikes an excellent balance of abstraction this way. The [documentation](https://aframe.io/docs/0.6.0/introduction/) is an excellent place to learn more about it in detail.
 
@@ -107,6 +107,7 @@ Now that we've got this sweet scene set up, we can populate it with objects. The
 ```
 
 You may just be seeing a dark sphere now. We need some lighting. Let there be light:
+
 ```javascript
 <Entity
   primitive="a-light"
@@ -264,7 +265,7 @@ A-Frame comes with a fully functional raycaster out of the box. [Raycasting](htt
 We've also added some feedback by scaling the cursor when it enters and leaves an object targeted by the raycaster. We're using the [aframe-event-set-component](https://github.com/ngokevin/kframe/tree/master/components/event-set/) to make this happen. It lets us define events and their effects accordingly. Now go back and add a `class="clickable"` prop to the 3D sphere Entity we created a bit ago. While you're at it, attach an event handler so we can respond to clicks accordingly.
 
 ```javascript
- <Entity
+<Entity
   class="clickable"
   // ... all the other props we've already added before
   events={{
@@ -283,7 +284,7 @@ _handleClick() {
 }
 ```
 
-Great, now we're changing the state of app. Let's hook that up to the A-Frame object. Use the `colorIndex` variable to cycle through a globaly defined array of colors. I've already added that for you so you just need to change the `color` prop of the sphere Entity we created. Like so:
+Great, now we're changing the state of app. Let's hook that up to the A-Frame object. Use the `colorIndex` variable to cycle through a globally defined array of colors. I've already added that for you so you just need to change the `color` prop of the sphere Entity we created. Like so:
 
 ```javascript
 <Entity
