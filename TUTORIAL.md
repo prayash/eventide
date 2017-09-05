@@ -14,7 +14,7 @@ Exciting, right? Without further ado, let's get started!
 
 ![A-Frame Banner](img/aframe-banner.png "A-Frame Banner")
 
-A-Frame is a framework for building rich 3D experiences on the web. It's built on top of three.js, an advanced 3D JavaScript library that makes working with WebGL extremely fun. The cool part is that A-Frame lets you build WebVR apps without writing a single line of JavaScript (to some extent). You can create a basic scene in a few minutes writing a [couple lines of HTML](https://codepen.io/prayasht/pen/EvderE?editors=1000). It provides an excellent HTML API for you to scaffold out the scene, while still giving you full flexibility by letting you access the rich three.js API that powers it. In my opinion, A-Frame strikes an excellent balance of abstraction this way. The [documentation](https://aframe.io/docs/0.6.0/introduction/) is an excellent place to learn more about it in detail.
+A-Frame is a framework for building rich 3D experiences on the web. It's built on top of three.js, an advanced 3D JavaScript library that makes working with WebGL extremely fun. The cool part is that A-Frame lets you build WebVR apps without writing a single line of JavaScript (to some extent). You can create a basic scene in a few minutes writing just a [few lines of HTML](https://codepen.io/prayasht/pen/EvderE?editors=1000). It provides an excellent HTML API for you to scaffold out the scene, while still giving you full flexibility by letting you access the rich three.js API that powers it. In my opinion, A-Frame strikes an excellent balance of abstraction this way. The [documentation](https://aframe.io/docs/0.6.0/introduction/) is an excellent place to learn more about it in detail.
 
 ## Setup
 The first thing we're going to be doing is setting up A-Frame and React. I've already gone ahead and done that for you so you can simply clone [this repo](https://github.com/prayasht/aframe-preact-starter), `cd` into it, and run `yarn install` to get all the required dependencies. For this app, we're actually going to be using [Preact](http://preactjs.com), a fast and lightweight alternative to React, in order to reduce our bundle size. Dont worry, it's still the same API so if you've worked with React before then you shouldn't notice any differences. Go ahead and run `yarn start` to fire up the development server. Hit up [http://localhost:3333](http://localhost:3333) and you should be presented with a basic scene including a spinning cube and some text. I highly suggest that you spend some time going through the README in that repo. It has some essential information about A-Frame and React. It also goes more into detail on what and how to install everything. Now on to the fun stuff.
@@ -38,11 +38,13 @@ A-Frame is built on the [Entity-component-system](https://en.wikipedia.org/wiki/
 Sooooo, all we need is markup and a few scripts. What's the point of using React, anyway? Well, if you wanted to attach state to these objects, then manually doing it would be a lot of hard work. A-Frame handles almost all of its rendering through the use of HTML attributes (or components as mentioned above), and updating different attributes of many objects in your scene manually can be a massive headache. Since React is excellent at binding state to markup, diffing it for you, and re-rendering, we'll be taking advantage of that. Keep in mind that we won't be handling any WebGL render calls or manipulating the animation loop with React. A-Frame has a built in animation engine that handles that for us. We just need to pass in the appropriate props and let it do the hard work for us. See how this is pretty much like creating your ordinary React app, except the result is WebGL instead of raw markup? Well, technically, it is still markup. But A-Frame converts that to WebGL for us. Enough with the talking, let's write some code.
 
 ## Setting Up the Scene
-The first thing we should do is to establish an environment. Let's start with a blank slate. Delete everything inside the `Scene` element. For the sake of making things look interesting right away, we'll utilize a 3rd party component to generate a nice environment for us. 3rd party components pack a lot of WebGL code inside them, but expose a very simple interface in the markup. It's already been imported in the `app/intialize.js` file so all we need to do is attach it to the `Scene` element. I've already configured some nice defaults for us to get started, but feel free to modify to your taste. As an aside, you can press `CTRL + ALT + I` to load up the A-Frame Scene Inspector and change parameters in real-time. I find this super handy in the initial stage when designing the app. Our file should now look something like:
+The first thing we should do is to establish an environment. Let's start with a blank slate. Delete everything inside the `Scene` element. For the sake of making things look interesting right away, we'll utilize a 3rd party component called [aframe-environment](https://github.com/feiss/aframe-environment-component) to generate a nice environment for us. Third party components pack a lot of WebGL code inside them, but expose a very simple interface in the markup. It's already been imported in the `app/intialize.js` file so all we need to do is attach it to the `Scene` element. I've already configured some nice defaults for us to get started, but feel free to modify to your taste. As an aside, you can press `CTRL + ALT + I` to load up the A-Frame Scene Inspector and change parameters in real-time. I find this super handy in the initial stage when designing the app. Our file should now look something like:
 
 ```javascript
 import { h, Component } from 'preact'
 import { Entity, Scene } from 'aframe-react'
+
+const COLORS = ['#D92B6A', '#9564F2', '#FFCF59']
 
 class App extends Component {
   constructor() {
@@ -217,7 +219,7 @@ init: function() {
 }
 ```
 
-Let's go back to the markup to reflect tha changes we've made to the component. We'll add a `lowpoly` prop to our Entity and give it an object of the parameters we defined in our schema. It should now look like:
+Let's go back to the markup to reflect the changes we've made to the component. We'll add a `lowpoly` prop to our Entity and give it an object of the parameters we defined in our schema. It should now look like:
 
 ```javascript
 <Entity
@@ -300,12 +302,22 @@ Great, now we're changing the state of app. Let's hook that up to the A-Frame ob
 One last thing, we need to modify the component to swap the color property of the material since we pass it a new one when clicked. Underneath the `init` function, define an `update` function, which gets invoked whenever a prop of the component gets modified. Inside the `update` function, we simply swap our the color of the material like so:
 
 ```javascript
-update: function() {
-  // Get the ref of the object to which the component is attached
-  const obj = this.el.getObject3D('mesh')
+AFRAME.registerComponent('lowpoly', {
+  schema: {
+    // We've already filled this out
+  },
 
-  // Modify the color of the material during runtime
-  obj.material.color = new THREE.Color(this.data.color)
+  init: function() {
+    // We've already filled this out
+  }
+
+  update: function() {
+    // Get the ref of the object to which the component is attached
+    const obj = this.el.getObject3D('mesh')
+
+    // Modify the color of the material during runtime
+    obj.material.color = new THREE.Color(this.data.color)
+  }
 }
 ```
 
@@ -350,7 +362,7 @@ animation__oscillate={{
 ```
 
 ## Polishing Up
-We're almost there! Post-processing effects in WebGL are extremely fast and can add a lot of character to your scene. There are many shaders available for use depending on the aesthetic you're going for. If you want to add post-processing effects to your scene, you can utilize the additional shaders provided by three.js to do so. Some of my favorites are the bloom, blur, and noise shaders. Let's run through that very briefly here.
+We're almost there! Post-processing effects in WebGL are extremely fast and can add a lot of character to your scene. There are many shaders available for use depending on the aesthetic you're going for. If you want to add post-processing effects to your scene, you can utilize the additional shaders provided by three.js to do so. Some of my favorites are bloom, blur, and noise shaders. Let's run through that very briefly here.
 
 Post-processing effects operate on your scene as a whole. Think of it as a bitmap that's rendered every frame. This is called the [framebuffer](https://en.wikipedia.org/wiki/Framebuffer). The effects take this image, process it, and output it back to the renderer. The [aframe-effects-component](https://github.com/wizgrav/aframe-effects/) has already been imported for your convenience, so let's throw the props at our `Scene` tag. We'll be using a mix of bloom, film, and FXAA to give our final scene a touch of personality:
 
@@ -376,7 +388,7 @@ Boom. we're done. There's an obscene amount of shader math going on behind the s
 ## Deployment
 It's time to deploy. The final step is letting it live on someone else's server and not your dev server. We'll use the super awesome tool called surge to make this painfully easy. First, we need a production build of our app. Run `yarn build`. It will output final build to the `public/` directory. Install surge by running `npm install -g surge`. Now run `surge public/` to push the contents of that directory live. It should prompt you to log in or create an account and you'll have the choice to change your domain name. The rest should be very straightforward, and you will get a URL of your deployed site at the ending prompt. That's it. I've hosted mine [http://eventide.surge.sh](http://eventide.surge.sh).
 
-![Surge Prompt](img/surge-prompt.png "Surge Prompt")
+![Surge Prompt](img/surge.png "Surge Prompt")
 
 ## Fin
 I hope you enjoyed this tutorial and you see the power of A-Frame and its capabilities. By combining third-party components and cooking up our own, we can create something decent with relative ease. Extending all this with React, we're able to manage state efficiently and go crazy with dynamic props. We've only scratched the surface, and now it's up to you to explore the rest. As 2D content fails to meet the rising demand for immersive content on the web, tools like A-Frame and three.js have come into the limelight. The future of WebVR is looking bright. Go forth and unleash your creativity, for the browser is an empty 3D canvas and code is your brush. If you end up making something cool, please tweet me [@_prayash](http://twitter.com/_prayash) and A-Frame [@aframevr](http://twitter.com/aframevr) so we all can see it too.
