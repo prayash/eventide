@@ -253,7 +253,7 @@ A-Frame comes with a fully functional raycaster out of the box. [Raycasting](htt
       _event: 'mouseenter',
       scale: { x: 1.4, y: 1.4, z: 1.4 }
     }}
-    event-set__1={{
+    event-set__2={{
       _event: 'mouseleave',
       scale: { x: 1, y: 1, z: 1 }
     }}
