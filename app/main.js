@@ -22,9 +22,14 @@ class Main extends Component {
     return (
       <Scene
         effects="bloom, film, fxaa"
-        bloom="radius: 0.99"
-        film="sIntensity: 0.15; nIntensity: 0.25"
         fxaa
+        bloom={{
+          radius: 0.99
+        }}
+        film={{
+          sIntensity: 0.15,
+          nIntensity: 0.25
+        }}
         environment={{
           preset: 'starry',
           seed: 1,
@@ -106,7 +111,9 @@ class Main extends Component {
               _event: 'mouseleave',
               scale: { x: 1, y: 1, z: 1 }
             }}
-            raycaster="objects: .clickable"
+            raycaster={{
+              objects: '.clickable'
+            }}
           />
         </Entity>
       </Scene>
