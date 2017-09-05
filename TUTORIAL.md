@@ -257,7 +257,9 @@ A-Frame comes with a fully functional raycaster out of the box. [Raycasting](htt
       _event: 'mouseleave',
       scale: { x: 1, y: 1, z: 1 }
     }}
-    raycaster="objects: .clickable"
+    raycaster={{
+      objects: '.clickable'
+    }}
   />
 </Entity>
 ```
@@ -355,9 +357,15 @@ Post-processing effects operate on your scene as a whole. Think of it as a bitma
 ```javascript
 <Scene
   effects="bloom, film, fxaa"
-  bloom="radius: 0.99"
-  film="sIntensity: 0.15; nIntensity: 0.15"
   fxaa
+  bloom={{
+    radius: 0.99
+  }}
+  film={{
+    sIntensity: 0.15,
+    nIntensity: 0.25
+  }}
+  // ...
   // Everything else that was already there
 />
 ```
