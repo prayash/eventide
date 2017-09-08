@@ -24,7 +24,7 @@ The first thing we're going to be doing is setting up A-Frame and React. I've al
 </p>
 
 ## Building Blocks
-Fire up the editor on the root of the project directory and inspect the file `app/main.js`, that's where we'll be building out our scene. Let's take a second to break this down.
+Fire up the editor on the root of the project directory and inspect the file `app/main.js` (or view it on [GitHub](https://github.com/prayasht/aframe-preact-starter/blob/master/app/main.js)), that's where we'll be building out our scene. Let's take a second to break this down.
 
 The `Scene` component is the root node of an A-Frame app. It's what creates the stage for you to place 3D objects in, initializes the camera, the WebGL renderer and handles other boilerplate. It should be the outermost element wrapping everything else inside it. You can think of `Entity` like an HTML `div`. Entities are the basic building blocks of an A-Frame `Scene`. Every object inside the A-Frame scene is an `Entity`.
 
@@ -119,6 +119,8 @@ You may just be seeing a dark sphere now. We need some lighting. Let there be li
   position={{ x: 2.5, y: 0.0, z: 0.0 }}
 />
 ```
+
+This adds a directional light, which is a type of light emitted from a certain point in space. You can also try using ambient or point lights, but in this situation, I prefer directional to emulate it coming from the sun's direction.
 
 ![A-Frame 3D Object](img/aframe-object.png "A-Frame 3D Object")
 
@@ -386,12 +388,12 @@ Post-processing effects operate on your scene as a whole. Think of it as a bitma
 Boom. we're done. There's an obscene amount of shader math going on behind the scene (pun intended), but you don't need to know any of it. That's the beauty of abstraction. If you're curious you can always dig into the source files and look at the shader wizardry that's happening back there. It's a world of its own. We're pretty much done here. Onto the final step...
 
 ## Deployment
-It's time to deploy. The final step is letting it live on someone else's server and not your dev server. We'll use the super awesome tool called surge to make this painfully easy. First, we need a production build of our app. Run `yarn build`. It will output final build to the `public/` directory. Install surge by running `npm install -g surge`. Now run `surge public/` to push the contents of that directory live. It should prompt you to log in or create an account and you'll have the choice to change your domain name. The rest should be very straightforward, and you will get a URL of your deployed site at the ending prompt. That's it. I've hosted mine [http://eventide.surge.sh](http://eventide.surge.sh).
+It's time to deploy. The final step is letting it live on someone else's server and not your dev server. We'll use the super awesome tool called surge to make this painfully easy. First, we need a production build of our app. Run `yarn build`. It will output final build to the `public/` directory. Install surge by running `npm install -g surge`. Now run `surge public/` to push the contents of that directory live. It should prompt you to log in or create an account and you'll have the choice to change your domain name. The rest should be very straightforward, and you will get a URL of your deployed site at the end. That's it. I've hosted mine [http://eventide.surge.sh](http://eventide.surge.sh).
 
 ![Surge Prompt](img/surge.png "Surge Prompt")
 
 ## Fin
-I hope you enjoyed this tutorial and you see the power of A-Frame and its capabilities. By combining third-party components and cooking up our own, we can create something decent with relative ease. Extending all this with React, we're able to manage state efficiently and go crazy with dynamic props. We've only scratched the surface, and now it's up to you to explore the rest. As 2D content fails to meet the rising demand for immersive content on the web, tools like A-Frame and three.js have come into the limelight. The future of WebVR is looking bright. Go forth and unleash your creativity, for the browser is an empty 3D canvas and code is your brush. If you end up making something cool, please tweet me [@_prayash](http://twitter.com/_prayash) and A-Frame [@aframevr](http://twitter.com/aframevr) so we all can see it too.
+I hope you enjoyed this tutorial and you see the power of A-Frame and its capabilities. By combining third-party components and cooking up our own, we can create neat 3D scenes with relative ease. Extending all this with React, we're able to manage state efficiently and go crazy with dynamic props. We've only scratched the surface, and now it's up to you to explore the rest. As 2D content fails to meet the rising demand for immersive content on the web, tools like A-Frame and three.js have come into the limelight. The future of WebVR is looking bright. Go forth and unleash your creativity, for the browser is an empty 3D canvas and code is your brush. If you end up making something cool, please tweet me [@_prayash](http://twitter.com/_prayash) and A-Frame [@aframevr](http://twitter.com/aframevr) so we all can see it too.
 
 ## Additional Resources
 Check out these additional resources to advance your knowledge of A-Frame.
