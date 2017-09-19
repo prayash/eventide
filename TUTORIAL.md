@@ -125,7 +125,7 @@ This adds a directional light, which is a type of light emitted from a certain p
 ![A-Frame 3D Object](img/aframe-object.png "A-Frame 3D Object")
 
 ## Building Your First A-Frame Component
-Baby steps. We now have a 3D object and an environment that we can walk/look around in. Now let's take it up a notch and build our own custom A-Frame component from scratch. This component will alter the appearance of our object, and also attach interactive behavior to it. Our component will take the provided shape, and create a slightly bigger wireframe of the same shape on top of it. That'll give it a really neat geometric, meshy (is that even a word?) look. To do that, we'll define our component in the existing js file `app/components/aframe-lowpoly-component.js`.
+Baby steps. We now have a 3D object and an environment that we can walk/look around in. Now let's take it up a notch and build our own custom A-Frame component from scratch. This component will alter the appearance of our object, and also attach interactive behavior to it. Our component will take the provided shape, and create a slightly bigger wireframe of the same shape on top of it. That'll give it a really neat geometric, meshy (is that even a word?) look. To do that, we'll define our component in the existing js file `app/components/aframe-custom.js`.
 
 First, we'll register the component using the global `AFRAME` reference, define our schema for the component, and add our three.js code inside the `init` function. You can think of schema as arguments, or properties that can be passed to the component. We'll be passing in a few options like color, opacity, and other visual properties. The `init` function will run as soon as the component gets attached to the Entity. The template for our A-Frame component looks like:
 
@@ -393,11 +393,12 @@ It's time to deploy. The final step is letting it live on someone else's server 
 ![Surge Prompt](img/surge.png "Surge Prompt")
 
 ## Fin
-I hope you enjoyed this tutorial and you see the power of A-Frame and its capabilities. By combining third-party components and cooking up our own, we can create neat 3D scenes with relative ease. Extending all this with React, we're able to manage state efficiently and go crazy with dynamic props. We've only scratched the surface, and now it's up to you to explore the rest. As 2D content fails to meet the rising demand for immersive content on the web, tools like A-Frame and three.js have come into the limelight. The future of WebVR is looking bright. Go forth and unleash your creativity, for the browser is an empty 3D canvas and code is your brush. If you end up making something cool, please tweet me [@_prayash](http://twitter.com/_prayash) and A-Frame [@aframevr](http://twitter.com/aframevr) so we all can see it too.
+I hope you enjoyed this tutorial and you see the power of A-Frame and its capabilities. By combining third-party components and cooking up our own, we can create neat 3D scenes with relative ease. Extending all this with React, we're able to manage state efficiently and go crazy with dynamic props. We've only scratched the surface, and now it's up to you to explore the rest. As 2D content fails to meet the rising demand for immersive content on the web, tools like A-Frame and three.js have come into the limelight. The future of WebVR is looking bright. Go forth and unleash your creativity, for the browser is an empty 3D canvas and code is your brush. If you end up making something cool, feel free tweet at [@_prayash](http://twitter.com/_prayash) and A-Frame [@aframevr](http://twitter.com/aframevr) so we everyone else can see it too.
 
 ## Additional Resources
-Check out these additional resources to advance your knowledge of A-Frame.
+Check out these additional resources to advance your knowledge of A-Frame and WebVR.
 
+- [Crash Course: VR Design for N00bs](https://www.viget.com/articles/crash-course-vr-design-for-noobs) for tips on designing for VR.
 - [A-Frame School](https://aframe.io/aframe-school/#/) for more A-Frame knowledge.
 - [A Week of A-Frame](https://aframe.io/blog/awoa-75/) for inspiration.
 - [A-Frame Slack](https://aframevr-slack.herokuapp.com/) for the community.
